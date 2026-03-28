@@ -13,8 +13,16 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    flex-direction: column;
 }
 
+/* DINERO */
+#money {
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+/* BOTÓN */
 button {
     background: white;
     color: black;
@@ -22,17 +30,62 @@ button {
     font-size: 30px;
     padding: 15px 40px;
     cursor: pointer;
+    position: relative;
+}
+
+/* TEXTO +1$ */
+.floating-text {
+    position: absolute;
+    color: green;
+    font-size: 18px;
+    pointer-events: none;
+    animation: floatUp 1s forwards;
+}
+
+/* ANIMACIÓN */
+@keyframes floatUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
 }
 </style>
 </head>
 
 <body>
 
-<button onclick="clickGame()">Click</button>
+<div id="money">$0</div>
+
+<button onclick="clickGame(event)">Click</button>
 
 <script>
-function clickGame() {
-    console.log("Click!");
+let money = 0;
+
+function clickGame(event) {
+    // sumar dinero
+    money += 1;
+    document.getElementById("money").innerText = "$" + money;
+
+    // crear +1$
+    const text = document.createElement("span");
+    text.className = "floating-text";
+    text.innerText = "+1$";
+
+    // posición donde hiciste click
+    const rect = event.target.getBoundingClientRect();
+    text.style.left = (event.clientX - rect.left) + "px";
+    text.style.top = (event.clientY - rect.top) + "px";
+
+    event.target.appendChild(text);
+
+    // eliminar después de animación
+    setTimeout(() => {
+        text.remove();
+    }, 1000);
 }
 </script>
 
