@@ -7,9 +7,9 @@
 <style>
 body {
     margin: 0;
-    background: black;
-    color: white;
-    font-family: Arial, sans-serif; /* fuente simple */
+    background: white; /* fondo blanco */
+    color: black;
+    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -45,12 +45,8 @@ button {
 
 /* Achievements */
 .achievements {
-    background: #fdeca6; /* color pedido */
+    background: #fdeca6;
     color: black;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
 }
 
 /* Hover */
@@ -68,18 +64,17 @@ button:hover {
     <button class="play" onclick="startGame()">Play</button>
 
     <button class="achievements" onclick="openAchievements()">
-    
         Achievements
     </button>
 </div>
 
 <script>
 function startGame() {
-    alert("Game will start soon...");
+    window.location.href = "game.html";
 }
 
 function openAchievements() {
-    alert("Achievements menu coming soon...");
+    alert("Achievements coming soon...");
 }
 </script>
 
