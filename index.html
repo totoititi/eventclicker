@@ -40,11 +40,10 @@ button {
     transition: 0.2s;
 }
 
-/* Play (solo texto centrado) */
+/* Play */
 .play {
     background: limegreen;
     color: black;
-    display: inline-block;
 }
 
 /* Achievements */
@@ -54,14 +53,15 @@ button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
 }
 
-/* Imagen izquierda */
+/* Imagen */
 .achievements img {
     width: 30px;
     height: 30px;
     opacity: 0.5;
+    transform: rotate(-15deg); /* inclinada izquierda */
+    margin-right: 5px; /* pegada al texto */
 }
 
 /* Hover */
@@ -79,7 +79,7 @@ button:hover {
     <button class="play" onclick="startGame()">Play</button>
 
     <button class="achievements" onclick="openAchievements()">
-        <img src="trophy.png">
+        <img src="https://raw.githubusercontent.com/totoititi/eventclicker/main/american-football-trophy-equipment-free-png.png">
         Achievements
     </button>
 </div>
