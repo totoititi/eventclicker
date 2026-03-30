@@ -2,57 +2,80 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Event Clicker - Game</title>
+<title>Event Clicker</title>
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    flex-direction: column;
+
+body{
+margin:0;
+font-family:Arial;
+background:#f0f0f0;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+height:100vh;
 }
 
-/* DINERO */
-#money {
-    font-size: 30px;
-    margin-bottom: 20px;
+/* dinero */
+#money{
+font-size:30px;
+margin-bottom:10px;
 }
 
-/* BOTÓN */
-button {
-    background: white;
-    color: black;
-    border: 2px solid black;
-    font-size: 30px;
-    padding: 15px 40px;
-    cursor: pointer;
-    position: relative;
+/* botones */
+button{
+background:white;
+border:2px solid black;
+font-size:26px;
+padding:12px 35px;
+cursor:pointer;
 }
 
-/* TEXTO +1$ */
-.floating-text {
-    position: absolute;
-    color: green;
-    font-size: 18px;
-    pointer-events: none;
-    animation: floatUp 1s forwards;
+/* botón click */
+#clickButton{
+margin-bottom:15px;
 }
 
-/* ANIMACIÓN */
-@keyframes floatUp {
-    0% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    100% {
-        opacity: 0;
-        transform: translateY(-50px);
-    }
+/* floating text */
+.floating{
+position:absolute;
+color:green;
+font-size:16px;
+animation:floatUp 1s forwards;
+pointer-events:none;
 }
+
+@keyframes floatUp{
+0%{opacity:1; transform:translateY(0);}
+100%{opacity:0; transform:translateY(-50px);}
+}
+
+/* tienda */
+
+#shop{
+position:fixed;
+right:20px;
+top:20px;
+background:white;
+border:2px solid black;
+padding:15px;
+width:260px;
+display:none;
+}
+
+.shopItem{
+margin-bottom:10px;
+border-bottom:1px solid #ddd;
+padding-bottom:8px;
+}
+
+.buyBtn{
+margin-top:5px;
+font-size:16px;
+padding:5px 10px;
+}
+
 </style>
 </head>
 
@@ -60,33 +83,122 @@ button {
 
 <div id="money">$0</div>
 
-<button onclick="clickGame(event)">Click</button>
+<button id="clickButton" onclick="clickGame(event)">Click</button>
+
+<button onclick="toggleShop()">Shop</button>
+
+<div id="shop">
+
+<h3>Shop</h3>
+
+<div class="shopItem">
+<b>Clicker</b><br>
+1 click por segundo<br>
+$100<br>
+<button class="buyBtn" onclick="buy('clicker')">Buy</button>
+</div>
+
+<div class="shopItem">
+<b>Staff</b><br>
+2 clicks por segundo<br>
+$3000<br>
+<button class="buyBtn" onclick="buy('staff')">Buy</button>
+</div>
+
+<div class="shopItem">
+<b>CPS</b><br>
+Muestra clicks por segundo<br>
+$5000<br>
+<button class="buyBtn" onclick="buy('cps')">Buy</button>
+</div>
+
+</div>
 
 <script>
-let money = 0;
 
-function clickGame(event) {
-    // sumar dinero
-    money += 1;
-    document.getElementById("money").innerText = "$" + money;
+let money=0
 
-    // crear +1$
-    const text = document.createElement("span");
-    text.className = "floating-text";
-    text.innerText = "+1$";
+let autoClick=0
 
-    // posición donde hiciste click
-    const rect = event.target.getBoundingClientRect();
-    text.style.left = (event.clientX - rect.left) + "px";
-    text.style.top = (event.clientY - rect.top) + "px";
+let showCPS=false
 
-    event.target.appendChild(text);
+function clickGame(e){
 
-    // eliminar después de animación
-    setTimeout(() => {
-        text.remove();
-    }, 1000);
+let gain=1
+
+money+=gain
+
+updateMoney()
+
+const t=document.createElement("div")
+t.className="floating"
+t.innerText="+1$"
+
+t.style.left=e.clientX+"px"
+t.style.top=e.clientY+"px"
+
+document.body.appendChild(t)
+
+setTimeout(()=>{t.remove()},1000)
+
 }
+
+function updateMoney(){
+document.getElementById("money").innerText="$"+money
+}
+
+function toggleShop(){
+
+const s=document.getElementById("shop")
+
+s.style.display=(s.style.display=="none")?"block":"none"
+
+}
+
+function buy(item){
+
+if(item=="clicker"){
+
+if(money>=100){
+money-=100
+autoClick+=1
+setInterval(clickGameAuto,1000)
+updateMoney()
+}else alert("Not enough money")
+
+}
+
+if(item=="staff"){
+
+if(money>=3000){
+money-=3000
+autoClick+=2
+setInterval(clickGameAuto,500)
+updateMoney()
+}else alert("Not enough money")
+
+}
+
+if(item=="cps"){
+
+if(money>=5000){
+money-=5000
+showCPS=true
+updateMoney()
+}else alert("Not enough money")
+
+}
+
+}
+
+function clickGameAuto(){
+
+money+=1
+
+updateMoney()
+
+}
+
 </script>
 
 </body>
