@@ -17,13 +17,20 @@ justify-content:center;
 height:100vh;
 }
 
-/* dinero */
+/* money */
 #money{
 font-size:30px;
-margin-bottom:10px;
+margin-bottom:20px;
 }
 
 /* botones */
+#buttons{
+display:flex;
+flex-direction:column;
+gap:40px;
+margin-bottom:20px;
+}
+
 button{
 background:white;
 border:2px solid black;
@@ -33,6 +40,7 @@ cursor:pointer;
 }
 
 /* floating text */
+
 .floating{
 position:absolute;
 color:green;
@@ -46,7 +54,7 @@ pointer-events:none;
 100%{opacity:0; transform:translateY(-50px);}
 }
 
-/* tienda */
+/* shop */
 
 #shop{
 position:fixed;
@@ -78,9 +86,10 @@ padding:5px 10px;
 
 <div id="money">$0</div>
 
+<div id="buttons">
 <button onclick="clickGame()">Click</button>
-
 <button onclick="toggleShop()">Shop</button>
+</div>
 
 <div id="shop">
 
@@ -88,21 +97,21 @@ padding:5px 10px;
 
 <div class="shopItem">
 <b>Clicker</b><br>
-1 click por segundo<br>
+1 click per second<br>
 $100<br>
 <button class="buyBtn" onclick="buy('clicker')">Buy</button>
 </div>
 
 <div class="shopItem">
 <b>Staff</b><br>
-2 clicks por segundo<br>
+2 clicks per second<br>
 $750<br>
 <button class="buyBtn" onclick="buy('staff')">Buy</button>
 </div>
 
 <div class="shopItem">
-<b>Comodín 🃏</b><br>
-Deshace efectos<br>
+<b>Joker 🃏</b><br>
+Undo any chosen effect<br>
 $1000 (max 3)<br>
 <button class="buyBtn" onclick="buy('joker')">Buy</button>
 </div>
@@ -112,28 +121,18 @@ $1000 (max 3)<br>
 <script>
 
 let money=0
-
 let jokers=0
 
-/* CLICK NORMAL */
-
 function clickGame(){
-
 money+=1
 updateMoney()
-
 spawnText("+1$")
-
 }
-
-/* TEXTO ANIMADO */
 
 function spawnText(text){
 
 const t=document.createElement("div")
-
 t.className="floating"
-
 t.innerText=text
 
 t.style.left=(window.innerWidth/2)+"px"
@@ -145,13 +144,9 @@ setTimeout(()=>{t.remove()},1000)
 
 }
 
-/* DINERO */
-
 function updateMoney(){
 document.getElementById("money").innerText="$"+money
 }
-
-/* TIENDA */
 
 function toggleShop(){
 
@@ -160,8 +155,6 @@ const s=document.getElementById("shop")
 s.style.display=(s.style.display=="none")?"block":"none"
 
 }
-
-/* COMPRAR */
 
 function buy(item){
 
