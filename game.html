@@ -32,11 +32,6 @@ padding:12px 35px;
 cursor:pointer;
 }
 
-/* botón click */
-#clickButton{
-margin-bottom:15px;
-}
-
 /* floating text */
 .floating{
 position:absolute;
@@ -65,7 +60,7 @@ display:none;
 }
 
 .shopItem{
-margin-bottom:10px;
+margin-bottom:12px;
 border-bottom:1px solid #ddd;
 padding-bottom:8px;
 }
@@ -83,7 +78,7 @@ padding:5px 10px;
 
 <div id="money">$0</div>
 
-<button id="clickButton" onclick="clickGame(event)">Click</button>
+<button onclick="clickGame()">Click</button>
 
 <button onclick="toggleShop()">Shop</button>
 
@@ -101,15 +96,15 @@ $100<br>
 <div class="shopItem">
 <b>Staff</b><br>
 2 clicks por segundo<br>
-$3000<br>
+$750<br>
 <button class="buyBtn" onclick="buy('staff')">Buy</button>
 </div>
 
 <div class="shopItem">
-<b>CPS</b><br>
-Muestra clicks por segundo<br>
-$5000<br>
-<button class="buyBtn" onclick="buy('cps')">Buy</button>
+<b>Comodín 🃏</b><br>
+Deshace efectos<br>
+$1000 (max 3)<br>
+<button class="buyBtn" onclick="buy('joker')">Buy</button>
 </div>
 
 </div>
@@ -118,24 +113,31 @@ $5000<br>
 
 let money=0
 
-let autoClick=0
+let jokers=0
 
-let showCPS=false
+/* CLICK NORMAL */
 
-function clickGame(e){
+function clickGame(){
 
-let gain=1
-
-money+=gain
-
+money+=1
 updateMoney()
 
-const t=document.createElement("div")
-t.className="floating"
-t.innerText="+1$"
+spawnText("+1$")
 
-t.style.left=e.clientX+"px"
-t.style.top=e.clientY+"px"
+}
+
+/* TEXTO ANIMADO */
+
+function spawnText(text){
+
+const t=document.createElement("div")
+
+t.className="floating"
+
+t.innerText=text
+
+t.style.left=(window.innerWidth/2)+"px"
+t.style.top=(window.innerHeight/2)+"px"
 
 document.body.appendChild(t)
 
@@ -143,9 +145,13 @@ setTimeout(()=>{t.remove()},1000)
 
 }
 
+/* DINERO */
+
 function updateMoney(){
 document.getElementById("money").innerText="$"+money
 }
+
+/* TIENDA */
 
 function toggleShop(){
 
@@ -155,47 +161,59 @@ s.style.display=(s.style.display=="none")?"block":"none"
 
 }
 
+/* COMPRAR */
+
 function buy(item){
 
 if(item=="clicker"){
 
 if(money>=100){
 money-=100
-autoClick+=1
-setInterval(clickGameAuto,1000)
 updateMoney()
+
+setInterval(()=>{
+money+=1
+spawnText("+1$")
+updateMoney()
+},1000)
+
 }else alert("Not enough money")
 
 }
 
 if(item=="staff"){
 
-if(money>=3000){
-money-=3000
-autoClick+=2
-setInterval(clickGameAuto,500)
+if(money>=750){
+money-=750
 updateMoney()
-}else alert("Not enough money")
 
-}
-
-if(item=="cps"){
-
-if(money>=5000){
-money-=5000
-showCPS=true
-updateMoney()
-}else alert("Not enough money")
-
-}
-
-}
-
-function clickGameAuto(){
-
+setInterval(()=>{
 money+=1
-
+spawnText("+1$")
 updateMoney()
+},500)
+
+}else alert("Not enough money")
+
+}
+
+if(item=="joker"){
+
+if(jokers>=3){
+alert("Max jokers reached")
+return
+}
+
+if(money>=1000){
+money-=1000
+jokers++
+updateMoney()
+
+alert("You bought a Joker 🃏 ("+jokers+"/3)")
+
+}else alert("Not enough money")
+
+}
 
 }
 
