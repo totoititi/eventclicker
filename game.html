@@ -22,8 +22,6 @@ font-size:30px;
 margin-bottom:20px;
 }
 
-/* botones */
-
 #buttons{
 display:flex;
 flex-direction:column;
@@ -36,6 +34,15 @@ border:2px solid black;
 font-size:26px;
 padding:12px 35px;
 cursor:pointer;
+}
+
+/* botón deshabilitado */
+
+button:disabled{
+background:#cfcfcf;
+color:#666;
+border:2px solid #888;
+cursor:not-allowed;
 }
 
 /* texto flotante */
@@ -101,21 +108,21 @@ padding:5px 10px;
 <b>Clicker</b><br>
 1 click every 0.5 seconds<br>
 $100<br>
-<button class="buyBtn" onclick="buy('clicker')">Buy</button>
+<button id="buyClicker" class="buyBtn" onclick="buy('clicker')">Buy</button>
 </div>
 
 <div class="shopItem">
 <b>Staff</b><br>
 2 clicks every 0.5 seconds<br>
 $750<br>
-<button class="buyBtn" onclick="buy('staff')">Buy</button>
+<button id="buyStaff" class="buyBtn" onclick="buy('staff')">Buy</button>
 </div>
 
 <div class="shopItem">
 <b>Joker 🃏</b><br>
 Undo any chosen effect<br>
 $1000 (max 3)<br>
-<button class="buyBtn" onclick="buy('joker')">Buy</button>
+<button id="buyJoker" class="buyBtn" onclick="buy('joker')">Buy</button>
 </div>
 
 </div>
@@ -128,8 +135,6 @@ let jokers=0
 let hasClicker=false
 let hasStaff=false
 
-/* CLICK DEL JUGADOR */
-
 function clickGame(event){
 
 money+=1
@@ -139,9 +144,7 @@ spawnText("+1$", event.clientX, event.clientY)
 
 }
 
-/* TEXTO FLOTANTE */
-
-function spawnText(text, x, y){
+function spawnText(text,x,y){
 
 const t=document.createElement("div")
 
@@ -153,19 +156,13 @@ t.style.top=y+"px"
 
 document.body.appendChild(t)
 
-setTimeout(()=>{
-t.remove()
-},1000)
+setTimeout(()=>{t.remove()},1000)
 
 }
-
-/* DINERO */
 
 function updateMoney(){
 document.getElementById("money").innerText="$"+money
 }
-
-/* SHOP */
 
 function toggleShop(){
 
@@ -175,16 +172,11 @@ s.style.display=(s.style.display=="none")?"block":"none"
 
 }
 
-/* COMPRAR */
-
 function buy(item){
 
 if(item=="clicker"){
 
-if(hasClicker){
-alert("You already own this item")
-return
-}
+if(hasClicker)return
 
 if(money>=100){
 
@@ -192,27 +184,27 @@ money-=100
 hasClicker=true
 updateMoney()
 
+document.getElementById("buyClicker").disabled=true
+
 setInterval(()=>{
+
 money+=1
 updateMoney()
 
 const btn=document.getElementById("clickBtn")
 const rect=btn.getBoundingClientRect()
 
-spawnText("+1$", rect.left+rect.width/2, rect.top)
+spawnText("+1$",rect.left+rect.width/2,rect.top)
 
 },500)
 
-}else alert("Not enough money")
+}
 
 }
 
 if(item=="staff"){
 
-if(hasStaff){
-alert("You already own this item")
-return
-}
+if(hasStaff)return
 
 if(money>=750){
 
@@ -220,27 +212,27 @@ money-=750
 hasStaff=true
 updateMoney()
 
+document.getElementById("buyStaff").disabled=true
+
 setInterval(()=>{
+
 money+=2
 updateMoney()
 
 const btn=document.getElementById("clickBtn")
 const rect=btn.getBoundingClientRect()
 
-spawnText("+2$", rect.left+rect.width/2, rect.top)
+spawnText("+2$",rect.left+rect.width/2,rect.top)
 
 },500)
 
-}else alert("Not enough money")
+}
 
 }
 
 if(item=="joker"){
 
-if(jokers>=3){
-alert("Max jokers reached")
-return
-}
+if(jokers>=3)return
 
 if(money>=1000){
 
@@ -248,15 +240,17 @@ money-=1000
 jokers++
 updateMoney()
 
-alert("You bought a Joker 🃏 ("+jokers+"/3)")
+if(jokers>=3){
+document.getElementById("buyJoker").disabled=true
+}
 
-}else alert("Not enough money")
+}
 
 }
 
 }
 
-/* ALERTA AL SALIR */
+/* advertencia al salir */
 
 window.onbeforeunload=function(){
 return "Are you sure? Your progress may be lost.";
