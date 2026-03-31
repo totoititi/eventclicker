@@ -99,14 +99,14 @@ padding:5px 10px;
 
 <div class="shopItem">
 <b>Clicker</b><br>
-1 click per second<br>
+1 click every 0.5 seconds<br>
 $100<br>
 <button class="buyBtn" onclick="buy('clicker')">Buy</button>
 </div>
 
 <div class="shopItem">
 <b>Staff</b><br>
-2 clicks per second<br>
+2 clicks every 0.5 seconds<br>
 $750<br>
 <button class="buyBtn" onclick="buy('staff')">Buy</button>
 </div>
@@ -123,10 +123,7 @@ $1000 (max 3)<br>
 <script>
 
 let money=0
-
 let jokers=0
-
-let autoCPS=0
 
 let hasClicker=false
 let hasStaff=false
@@ -137,7 +134,6 @@ function clickGame(){
 
 money+=1
 updateMoney()
-
 spawnText("+1$")
 
 }
@@ -147,16 +143,14 @@ spawnText("+1$")
 function spawnText(text){
 
 const btn=document.getElementById("clickBtn")
-
 const rect=btn.getBoundingClientRect()
 
 const t=document.createElement("div")
-
 t.className="floating"
 t.innerText=text
 
-t.style.left=(rect.left + rect.width/2)+"px"
-t.style.top=(rect.top)+"px"
+t.style.left=(rect.left + rect.width/2 - 10) + "px"
+t.style.top=(rect.top - 10) + "px"
 
 document.body.appendChild(t)
 
@@ -167,7 +161,7 @@ setTimeout(()=>{t.remove()},1000)
 /* DINERO */
 
 function updateMoney(){
-document.getElementById("money").innerText="$"+money
+document.getElementById("money").innerText="$"+Math.floor(money)
 }
 
 /* TIENDA */
@@ -195,8 +189,15 @@ if(money>=100){
 
 money-=100
 hasClicker=true
-autoCPS+=1
 updateMoney()
+
+setInterval(()=>{
+
+money+=1
+spawnText("+1$")
+updateMoney()
+
+},500)
 
 }else alert("Not enough money")
 
@@ -213,8 +214,15 @@ if(money>=750){
 
 money-=750
 hasStaff=true
-autoCPS+=2
 updateMoney()
+
+setInterval(()=>{
+
+money+=2
+spawnText("+2$")
+updateMoney()
+
+},500)
 
 }else alert("Not enough money")
 
@@ -240,24 +248,6 @@ alert("You bought a Joker 🃏 ("+jokers+"/3)")
 }
 
 }
-
-/* AUTOCLICKERS (cada 0.5 segundos) */
-
-setInterval(()=>{
-
-if(autoCPS>0){
-
-let gain=autoCPS*0.5
-
-money+=gain
-
-spawnText("+"+gain+"$")
-
-updateMoney()
-
-}
-
-},500)
 
 </script>
 
