@@ -17,18 +17,17 @@ justify-content:center;
 height:100vh;
 }
 
-/* money */
 #money{
 font-size:30px;
 margin-bottom:20px;
 }
 
 /* botones */
+
 #buttons{
 display:flex;
 flex-direction:column;
 gap:40px;
-margin-bottom:20px;
 }
 
 button{
@@ -87,8 +86,11 @@ padding:5px 10px;
 <div id="money">$0</div>
 
 <div id="buttons">
-<button onclick="clickGame()">Click</button>
+
+<button id="clickBtn" onclick="clickGame()">Click</button>
+
 <button onclick="toggleShop()">Shop</button>
+
 </div>
 
 <div id="shop">
@@ -121,22 +123,40 @@ $1000 (max 3)<br>
 <script>
 
 let money=0
+
 let jokers=0
 
+let autoCPS=0
+
+let hasClicker=false
+let hasStaff=false
+
+/* CLICK DEL JUGADOR */
+
 function clickGame(){
+
 money+=1
 updateMoney()
+
 spawnText("+1$")
+
 }
+
+/* TEXTO FLOTANTE */
 
 function spawnText(text){
 
+const btn=document.getElementById("clickBtn")
+
+const rect=btn.getBoundingClientRect()
+
 const t=document.createElement("div")
+
 t.className="floating"
 t.innerText=text
 
-t.style.left=(window.innerWidth/2)+"px"
-t.style.top=(window.innerHeight/2)+"px"
+t.style.left=(rect.left + rect.width/2)+"px"
+t.style.top=(rect.top)+"px"
 
 document.body.appendChild(t)
 
@@ -144,9 +164,13 @@ setTimeout(()=>{t.remove()},1000)
 
 }
 
+/* DINERO */
+
 function updateMoney(){
 document.getElementById("money").innerText="$"+money
 }
+
+/* TIENDA */
 
 function toggleShop(){
 
@@ -156,19 +180,23 @@ s.style.display=(s.style.display=="none")?"block":"none"
 
 }
 
+/* COMPRAR */
+
 function buy(item){
 
 if(item=="clicker"){
 
-if(money>=100){
-money-=100
-updateMoney()
+if(hasClicker){
+alert("You already own this item")
+return
+}
 
-setInterval(()=>{
-money+=1
-spawnText("+1$")
+if(money>=100){
+
+money-=100
+hasClicker=true
+autoCPS+=1
 updateMoney()
-},1000)
 
 }else alert("Not enough money")
 
@@ -176,15 +204,17 @@ updateMoney()
 
 if(item=="staff"){
 
-if(money>=750){
-money-=750
-updateMoney()
+if(hasStaff){
+alert("You already own this item")
+return
+}
 
-setInterval(()=>{
-money+=1
-spawnText("+1$")
+if(money>=750){
+
+money-=750
+hasStaff=true
+autoCPS+=2
 updateMoney()
-},500)
 
 }else alert("Not enough money")
 
@@ -198,6 +228,7 @@ return
 }
 
 if(money>=1000){
+
 money-=1000
 jokers++
 updateMoney()
@@ -209,6 +240,24 @@ alert("You bought a Joker 🃏 ("+jokers+"/3)")
 }
 
 }
+
+/* AUTOCLICKERS (cada 0.5 segundos) */
+
+setInterval(()=>{
+
+if(autoCPS>0){
+
+let gain=autoCPS*0.5
+
+money+=gain
+
+spawnText("+"+gain+"$")
+
+updateMoney()
+
+}
+
+},500)
 
 </script>
 
